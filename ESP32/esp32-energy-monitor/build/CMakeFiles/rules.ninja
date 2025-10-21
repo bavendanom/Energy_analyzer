@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: echo_rs485
+# Project: esp32-energy-monitor
 # Configurations: 
 # =============================================================================
 # =============================================================================
@@ -14,7 +14,7 @@
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__echo_rs485.2eelf_unscanned_
+rule C_COMPILER__esp32-energy-monitor.2eelf_unscanned_
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}C:\Users\braya\.espressif\tools\xtensa-esp-elf\esp-14.2.0_20241119\xtensa-esp-elf\bin\xtensa-esp32-elf-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,7 +24,7 @@ rule C_COMPILER__echo_rs485.2eelf_unscanned_
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__echo_rs485.2eelf_
+rule CXX_EXECUTABLE_LINKER__esp32-energy-monitor.2eelf_
   command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Users\braya\.espressif\tools\xtensa-esp-elf\esp-14.2.0_20241119\xtensa-esp-elf\bin\xtensa-esp32-elf-g++.exe $FLAGS $LINK_FLAGS @$RSP_FILE -o $TARGET_FILE && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   rspfile = $RSP_FILE
@@ -1789,6 +1789,25 @@ rule C_STATIC_LIBRARY_LINKER____idf_wifi_provisioning_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER____idf_ejemplo_component_unscanned_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}C:\Users\braya\.espressif\tools\xtensa-esp-elf\esp-14.2.0_20241119\xtensa-esp-elf\bin\xtensa-esp32-elf-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_ejemplo_component_
+  command = C:\WINDOWS\system32\cmd.exe /C "$PRE_LINK && C:\Users\braya\.espressif\tools\cmake\3.30.2\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Users\braya\.espressif\tools\xtensa-esp-elf\esp-14.2.0_20241119\xtensa-esp-elf\bin\xtensa-esp32-elf-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\braya\.espressif\tools\xtensa-esp-elf\esp-14.2.0_20241119\xtensa-esp-elf\bin\xtensa-esp32-elf-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER____idf_main_unscanned_
   depfile = $DEP_FILE
   deps = gcc
@@ -1809,7 +1828,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_main_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\braya\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Users\braya\OneDrive\Documentos\Proyecto_Iot\ESP32\uart_echo_rs485 -BC:\Users\braya\OneDrive\Documentos\Proyecto_Iot\ESP32\uart_echo_rs485\build
+  command = C:\Users\braya\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Users\braya\Documents\Proyectos\Energy_analyzer\ESP32\esp32-energy-monitor -BC:\Users\braya\Documents\Proyectos\Energy_analyzer\ESP32\esp32-energy-monitor\build
   description = Re-running CMake...
   generator = 1
 

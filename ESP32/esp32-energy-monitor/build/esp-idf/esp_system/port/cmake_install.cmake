@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/echo_rs485")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/esp32-energy-monitor")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/esp-idf/esp_system/port/soc/esp32/cmake_install.cmake")
+  include("C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/esp-idf/esp_system/port/soc/esp32/cmake_install.cmake")
 endif()
 

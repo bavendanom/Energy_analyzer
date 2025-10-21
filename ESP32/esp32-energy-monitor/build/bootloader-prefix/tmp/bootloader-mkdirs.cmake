@@ -10,18 +10,18 @@ if(NOT EXISTS "C:/Users/braya/esp/v5.4/esp-idf/components/bootloader/subproject"
   file(MAKE_DIRECTORY "C:/Users/braya/esp/v5.4/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader"
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix"
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/tmp"
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/src"
-  "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/tmp"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/src"
+  "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

@@ -318,7 +318,7 @@ rule C_STATIC_LIBRARY_LINKER____idf_main_
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\braya\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Users\braya\esp\v5.4\esp-idf\components\bootloader\subproject -BC:\Users\braya\OneDrive\Documentos\Proyecto_Iot\ESP32\uart_echo_rs485\build\bootloader
+  command = C:\Users\braya\.espressif\tools\cmake\3.30.2\bin\cmake.exe --regenerate-during-build -SC:\Users\braya\esp\v5.4\esp-idf\components\bootloader\subproject -BC:\Users\braya\Documents\Proyectos\Energy_analyzer\ESP32\esp32-energy-monitor\build\bootloader
   description = Re-running CMake...
   generator = 1
 

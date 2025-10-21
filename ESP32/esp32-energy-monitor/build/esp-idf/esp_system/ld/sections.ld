@@ -1,6 +1,6 @@
 /* Automatically generated file; DO NOT EDIT */
 /* Espressif IoT Development Framework Linker Script */
-/* Generated from: C:\Users\braya\OneDrive\Documentos\Proyecto_Iot\ESP32\uart_echo_rs485\build\esp-idf\esp_system\ld\sections.ld.in */
+/* Generated from: C:\Users\braya\Documents\Proyectos\Energy_analyzer\ESP32\esp32-energy-monitor\build\esp-idf\esp_system\ld\sections.ld.in */
 
 /*
 

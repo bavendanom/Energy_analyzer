@@ -39,11 +39,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader/esp-idf/esp_hw_support/port/esp32/cmake_install.cmake")
+  include("C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader/esp-idf/esp_hw_support/port/esp32/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/build/bootloader/esp-idf/esp_hw_support/lowpower/cmake_install.cmake")
+  include("C:/Users/braya/Documents/Proyectos/Energy_analyzer/ESP32/esp32-energy-monitor/build/bootloader/esp-idf/esp_hw_support/lowpower/cmake_install.cmake")
 endif()
 
