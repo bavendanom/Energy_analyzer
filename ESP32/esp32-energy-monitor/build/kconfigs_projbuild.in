@@ -1,0 +1,6 @@
+source "C:/Users/braya/esp/v5.4/esp-idf/components/bootloader/Kconfig.projbuild"
+source "C:/Users/braya/esp/v5.4/esp-idf/components/esp_app_format/Kconfig.projbuild"
+source "C:/Users/braya/esp/v5.4/esp-idf/components/esp_rom/Kconfig.projbuild"
+source "C:/Users/braya/esp/v5.4/esp-idf/components/esptool_py/Kconfig.projbuild"
+source "C:/Users/braya/esp/v5.4/esp-idf/components/partition_table/Kconfig.projbuild"
+source "C:/Users/braya/OneDrive/Documentos/Proyecto_Iot/ESP32/uart_echo_rs485/main/Kconfig.projbuild"
