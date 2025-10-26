@@ -5,3 +5,8 @@ sdkconfig.old
 *.pyc
 __pycache__/
 .vscode/
+# Ignorar archivos de compilación ESP-IDF
+ESP32/esp32-energy-monitor/build/
+ESP32/esp32-energy-monitor/sdkconfig
+ESP32/esp32-energy-monitor/dependencies.lock
+ESP32/esp32-energy-monitor/managed_components/
