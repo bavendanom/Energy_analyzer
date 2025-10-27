@@ -4,6 +4,7 @@
 #include "esp_log.h"
 #include "esp_err.h"
 #include "sdkconfig.h"
+#include <time.h>
 
 #define COMPONENTS_INCLUDES
 #include "manejo_wifi.h"
@@ -95,6 +96,37 @@ static esp_err_t test_mqtt_publish(void) {
 
     return ret;
 }
+/**
+ * @brief Ciclo de lectura Modbus y publicación MQTT
+ */
+static void task_modbus_mqtt_cycle(void *pvParameters) {
+    const char *TAG = "task_modbus_mqtt";
+
+    while (true) {
+        ESP_LOGI(TAG, "[CICLO] Iniciando lectura Modbus...");
+        esp_err_t ret = modbus_read_parameters();
+
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "[OK] Lectura Modbus completada correctamente.");
+
+            // Ejemplo de datos simulados (en futuro se llenan desde modbus_read_parameters)
+            char payload[256];
+            snprintf(payload, sizeof(payload),
+                "{\"nodo_id\":\"ESP32_01\",\"timestamp\":\"%ld\",\"registros\":{"
+                "\"r1\":%u,\"r2\":%u,\"r3\":%u,\"r4\":%u,\"r5\":%u}}",
+                (long)time(NULL), 123, 456, 789, 1011, 1213);
+
+            // Publicar mensaje
+            mqtt_publish_data("energia/nodo1/datos", payload);
+            ESP_LOGI(TAG, "[OK] Publicación MQTT completada: %s", payload);
+        } else {
+            ESP_LOGE(TAG, "[FAIL] Error en lectura Modbus (%s)", esp_err_to_name(ret));
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(5000)); // Espera 5 s entre lecturas
+    }
+}
+
 
 // ============================================================================
 // app_main(): Punto de entrada principal
@@ -121,12 +153,11 @@ void app_main(void) {
 
     ESP_LOGI(TAG, "===============================================");
     ESP_LOGI(TAG, "  Todas las pruebas completadas. Sistema listo.");
-    ESP_LOGI(TAG, "===============================================");
+    ESP_LOGI(TAG, "===============================================");   
+
 
     // Bucle principal simulado: ciclo de lectura cada 5 s
-    while (true) {
-        ESP_LOGI(TAG, "[CICLO] Lectura y publicación cada 5 s...");
-        // (En el futuro: integrar lectura real Modbus + publicación MQTT)
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
+    // Iniciar tarea cíclica Modbus + MQTT
+    xTaskCreate(task_modbus_mqtt_cycle, "task_modbus_mqtt_cycle", 4096, NULL, 5, NULL);
+
 }
