@@ -69,56 +69,35 @@ static esp_err_t test_modbus_init(void) {
 }
 
 /**
- * @brief Prueba unitaria: Publicación MQTT
- */
-static esp_err_t test_mqtt_publish(void) {
-    ESP_LOGI(TAG, "[TEST] Iniciando cliente MQTT...");
-    esp_err_t ret = mqtt_app_start(MQTT_BROKER_URI);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "[FAIL] No se pudo iniciar el cliente MQTT.");
-        return ret;
-    }
-
-    // Mensaje JSON simulado
-    const char *payload =
-        "{\"nodo_id\":\"ESP32_01\","
-        "\"timestamp\":\"2025-10-20T18:45:30Z\","
-        "\"mediciones\":{\"voltaje_V\":220.3,\"corriente_A\":1.26,"
-        "\"potencia_W\":277.8,\"energia_kWh\":1.842},"
-        "\"estado_modbus\":\"OK\",\"qos\":1}";
-
-    ret = mqtt_publish_data(MQTT_TOPIC, payload);
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "[OK] Mensaje MQTT publicado correctamente en %s", MQTT_TOPIC);
-    } else {
-        ESP_LOGE(TAG, "[FAIL] Error publicando mensaje MQTT (%s)", esp_err_to_name(ret));
-    }
-
-    return ret;
-}
-/**
  * @brief Ciclo de lectura Modbus y publicación MQTT
  */
 static void task_modbus_mqtt_cycle(void *pvParameters) {
     const char *TAG = "task_modbus_mqtt";
+    uint16_t registros[5]= {0};
 
     while (true) {
         ESP_LOGI(TAG, "[CICLO] Iniciando lectura Modbus...");
-        esp_err_t ret = modbus_read_parameters();
+        esp_err_t ret = modbus_read_parameters(registros);
 
         if (ret == ESP_OK) {
             ESP_LOGI(TAG, "[OK] Lectura Modbus completada correctamente.");
+            ESP_LOGI(TAG, "Valores: %d, %d, %d, %d, %d",
+                     registros[0], registros[1], registros[2], registros[3], registros[4]);
+            // Obtener tiempo actual
+            time_t timestamp;
+            time(&timestamp);
 
-            // Ejemplo de datos simulados (en futuro se llenan desde modbus_read_parameters)
-            char payload[256];
-            snprintf(payload, sizeof(payload),
-                "{\"nodo_id\":\"ESP32_01\",\"timestamp\":\"%ld\",\"registros\":{"
-                "\"r1\":%u,\"r2\":%u,\"r3\":%u,\"r4\":%u,\"r5\":%u}}",
-                (long)time(NULL), 123, 456, 789, 1011, 1213);
+            // Construir JSON real
+            char json_payload[256];
+            snprintf(json_payload, sizeof(json_payload),
+                "{\"nodo_id\":\"ESP32_01\",\"timestamp\":\"%lld\","
+                "\"registros\":{\"r1\":%d,\"r2\":%d,\"r3\":%d,\"r4\":%d,\"r5\":%d}}",
+                (long long)timestamp,
+                registros[0], registros[1], registros[2], registros[3], registros[4]);
 
-            // Publicar mensaje
-            mqtt_publish_data("energia/nodo1/datos", payload);
-            ESP_LOGI(TAG, "[OK] Publicación MQTT completada: %s", payload);
+            // Publicar
+            mqtt_publish_data(MQTT_TOPIC, json_payload);
+            ESP_LOGI(TAG, "[OK] Publicación MQTT completada: %s", json_payload);
         } else {
             ESP_LOGE(TAG, "[FAIL] Error en lectura Modbus (%s)", esp_err_to_name(ret));
         }
@@ -139,17 +118,52 @@ void app_main(void) {
     ESP_LOGI(TAG, "  Autor: Brayan Avendaño Mesa");
     ESP_LOGI(TAG, "===============================================");
 
-    // 1️⃣ Prueba de inicialización Wi-Fi
+    // Prueba de inicialización Wi-Fi
     ESP_ERROR_CHECK(test_wifi_connection());
 
-    // 2️⃣ Sincronización de tiempo vía NTP
+    // Sincronización de tiempo vía NTP
     ESP_ERROR_CHECK(test_ntp_sync());
 
-    // 3️⃣ Inicialización de interfaz Modbus
+    // Inicialización de interfaz Modbus
     ESP_ERROR_CHECK(test_modbus_init());
 
-    // 4️⃣ Publicación de datos MQTT simulados
-    ESP_ERROR_CHECK(test_mqtt_publish());
+    // 3️⃣ Inicialización del cliente MQTT
+    ESP_LOGI(TAG, "[TEST] Inicializando cliente MQTT...");
+    ESP_ERROR_CHECK(mqtt_app_start(MQTT_BROKER_URI));
+
+    // Lectura Modbus y publicación MQTT real
+    ESP_LOGI(TAG, "[TEST] Lectura de registros Modbus y publicación MQTT...");
+
+    uint16_t registros[5]= {0};
+    esp_err_t ret = modbus_read_parameters(registros);  // ← Lectura real
+
+    if (ret == ESP_OK) {
+        ESP_LOGI(TAG, "[OK] Lectura Modbus completada. Construyendo JSON...");
+
+        // Obtener timestamp actual
+        time_t timestamp;
+        time(&timestamp);
+
+        // Construir JSON con valores reales
+        char json_payload[256];
+        snprintf(json_payload, sizeof(json_payload),
+            "{\"nodo_id\":\"ESP32_01\",\"timestamp\":\"%lld\","
+            "\"registros\":{\"r1\":%d,\"r2\":%d,\"r3\":%d,\"r4\":%d,\"r5\":%d}}",
+            (long long)timestamp,
+            registros[0], registros[1], registros[2], registros[3], registros[4]);
+
+        // Publicar al broker MQTT
+        ret = mqtt_publish_data(MQTT_TOPIC, json_payload);
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "[OK] Publicación MQTT completada: %s", json_payload);
+        } else {
+            ESP_LOGE(TAG, "[FAIL] Error publicando MQTT (%s)", esp_err_to_name(ret));
+        }
+    } else {
+        ESP_LOGE(TAG, "[FAIL] Error leyendo registros Modbus (%s)", esp_err_to_name(ret));
+    }
+
+
 
     ESP_LOGI(TAG, "===============================================");
     ESP_LOGI(TAG, "  Todas las pruebas completadas. Sistema listo.");

@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 esp_err_t modbus_rs485_init(void);
-esp_err_t modbus_read_parameters(void);
+esp_err_t modbus_read_parameters(uint16_t *registros);
 
 #ifdef __cplusplus
 }

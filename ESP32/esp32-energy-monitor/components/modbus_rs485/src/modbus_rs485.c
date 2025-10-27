@@ -89,7 +89,7 @@ esp_err_t modbus_rs485_init(void) {
  * @brief Envía una solicitud de lectura Modbus (Read Holding Registers 0x03)
  *        y decodifica los valores recibidos.
  */
-esp_err_t modbus_read_parameters(void) {
+esp_err_t modbus_read_parameters(uint16_t *registros) {
     uint8_t request[8];
     uint8_t response[BUF_SIZE];
     size_t resp_len = 0;
@@ -143,6 +143,11 @@ esp_err_t modbus_read_parameters(void) {
         uint16_t reg_val = (response[index] << 8) | response[index + 1];
         ESP_LOGI(TAG, "Registro %d = %u (0x%04X)", MODBUS_START_ADDR + i, reg_val, reg_val);
     }
+    for (int i = 0; i < MODBUS_NUM_REGS; i++) {
+        registros[i] = (response[3 + i * 2] << 8) | response[4 + i * 2];
+        ESP_LOGI(TAG, "Registro %d = %d (0x%04X)", i + 1, registros[i], registros[i]);
+    }
+
 
     return ESP_OK;
 }

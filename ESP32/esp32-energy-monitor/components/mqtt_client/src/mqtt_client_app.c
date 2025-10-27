@@ -15,9 +15,19 @@ esp_err_t mqtt_app_start(const char *broker_uri) {
     return ESP_OK;
 }
 
-esp_err_t mqtt_publish_data(const char *topic, const char *payload) {
-    if (!client) return ESP_FAIL;
-    int msg_id = esp_mqtt_client_publish(client, topic, payload, 0, 1, 0);
-    ESP_LOGI(TAG, "Publicado en %s (msg_id=%d)", topic, msg_id);
-    return ESP_OK;
+esp_err_t mqtt_publish_data(const char *topic, const char *data) {
+    if (client == NULL) {
+        ESP_LOGE("mqtt_client_app", "Cliente MQTT no inicializado.");
+        return ESP_FAIL;
+    }
+
+    int msg_id = esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+    if (msg_id >= 0) {
+        ESP_LOGI("mqtt_client_app", "Publicado en %s (msg_id=%d): %s", topic, msg_id, data);
+        return ESP_OK;
+    } else {
+        ESP_LOGE("mqtt_client_app", "Error publicando en %s", topic);
+        return ESP_FAIL;
+    }
 }
+
