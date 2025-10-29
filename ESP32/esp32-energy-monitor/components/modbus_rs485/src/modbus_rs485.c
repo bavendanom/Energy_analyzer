@@ -145,7 +145,7 @@ esp_err_t modbus_read_parameters(uint16_t *registros) {
     }
     for (int i = 0; i < MODBUS_NUM_REGS; i++) {
         registros[i] = (response[3 + i * 2] << 8) | response[4 + i * 2];
-        ESP_LOGI(TAG, "Registro %d = %d (0x%04X)", i + 1, registros[i], registros[i]);
+        //ESP_LOGI(TAG, "Registro %d = %d (0x%04X)", i + 1, registros[i], registros[i]);
     }
 
 

@@ -163,8 +163,6 @@ void app_main(void) {
         ESP_LOGE(TAG, "[FAIL] Error leyendo registros Modbus (%s)", esp_err_to_name(ret));
     }
 
-
-
     ESP_LOGI(TAG, "===============================================");
     ESP_LOGI(TAG, "  Todas las pruebas completadas. Sistema listo.");
     ESP_LOGI(TAG, "===============================================");   
