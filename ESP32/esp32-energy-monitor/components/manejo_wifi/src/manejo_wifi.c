@@ -4,6 +4,8 @@
 #include "nvs_flash.h"
 #include "esp_event.h"
 #include "freertos/event_groups.h"
+#include "esp_netif.h"
+#include <stdbool.h>
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
@@ -49,4 +51,12 @@ esp_err_t wifi_init_sta(const char *ssid, const char *password) {
     ESP_LOGI(TAG, "Conectando a SSID:%s ...", ssid);
 
     return ESP_OK;
+}
+
+bool wifi_is_connected(void) {
+    wifi_ap_record_t ap_info;
+    if (esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK) {
+        return true;
+    }
+    return false;
 }

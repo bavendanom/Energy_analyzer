@@ -30,4 +30,7 @@ esp_err_t mqtt_publish_data(const char *topic, const char *data) {
         return ESP_FAIL;
     }
 }
+bool mqtt_is_ready(void) {
+    return (client != NULL);
+}
 
