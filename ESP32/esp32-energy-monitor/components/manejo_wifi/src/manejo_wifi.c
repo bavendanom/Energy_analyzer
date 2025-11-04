@@ -12,17 +12,34 @@
 
 static const char *TAG = "manejo_wifi";
 static EventGroupHandle_t s_wifi_event_group;
+static wifi_status_callback_t status_callback = NULL;
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                           int32_t event_id, void* event_data) {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
+        ESP_LOGI(TAG, "Iniciando conexión WiFi...");
+        
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGW(TAG, "Desconectado, reintentando...");
+        ESP_LOGW(TAG, "WiFi DESCONECTADO - Reintentando...");
+        xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        
+        // 🔴 CRÍTICO: Invocar el callback aquí
+        if (status_callback) {
+            status_callback(false);
+        }
+        
         esp_wifi_connect();
+        
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-        ESP_LOGI(TAG, "Conectado correctamente a la red Wi-Fi.");
+        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        ESP_LOGI(TAG, "WiFi CONECTADO - IP: " IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        
+        // 🔴 CRÍTICO: Invocar el callback aquí
+        if (status_callback) {
+            status_callback(true);
+        }
     }
 }
 
@@ -55,8 +72,9 @@ esp_err_t wifi_init_sta(const char *ssid, const char *password) {
 
 bool wifi_is_connected(void) {
     wifi_ap_record_t ap_info;
-    if (esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK) {
-        return true;
-    }
-    return false;
+    return (esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK);
+}
+
+void wifi_set_status_callback(wifi_status_callback_t callback) {
+    status_callback = callback;
 }

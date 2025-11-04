@@ -106,7 +106,7 @@ esp_err_t modbus_read_parameters(uint16_t *registros) {
     request[6] = crc & 0xFF;       // CRC_L
     request[7] = (crc >> 8) & 0xFF; // CRC_H
 
-    ESP_LOGI(TAG, "Enviando solicitud Modbus: leer %d registros desde %d (ID=%d)",
+    ESP_LOGD(TAG, "Enviando solicitud Modbus: leer %d registros desde %d (ID=%d)",
              MODBUS_NUM_REGS, MODBUS_START_ADDR, MODBUS_SLAVE_ID);
 
     esp_err_t ret = modbus_send_request(request, sizeof(request), response, &resp_len);
@@ -132,22 +132,25 @@ esp_err_t modbus_read_parameters(uint16_t *registros) {
         return ESP_FAIL;
     }
 
+    // Decodificar registros (16 bits Big Endian) - UN SOLO LOOP
     uint8_t byte_count = response[2];
-    ESP_LOGI(TAG, "Respuesta Modbus válida: %d bytes de datos", byte_count);
+    ESP_LOGD(TAG, "Respuesta Modbus válida: %d bytes de datos", byte_count);
 
-    // Decodificar registros (16 bits por registro)
     for (int i = 0; i < MODBUS_NUM_REGS; i++) {
         int index = 3 + i * 2;
-        if (index + 1 >= resp_len - 2) break;
+        
+        // Verificar que no nos salgamos del buffer
+        if (index + 1 >= resp_len - 2) {
+            ESP_LOGW(TAG, "Respuesta truncada en registro %d", i);
+            break;
+        }
 
+        // Decodificar valor (Big Endian: MSB primero)
         uint16_t reg_val = (response[index] << 8) | response[index + 1];
-        ESP_LOGI(TAG, "Registro %d = %u (0x%04X)", MODBUS_START_ADDR + i, reg_val, reg_val);
+        registros[i] = reg_val;
+        
+        ESP_LOGD(TAG, "Registro %d = %u (0x%04X)", MODBUS_START_ADDR + i, reg_val, reg_val);
     }
-    for (int i = 0; i < MODBUS_NUM_REGS; i++) {
-        registros[i] = (response[3 + i * 2] << 8) | response[4 + i * 2];
-        //ESP_LOGI(TAG, "Registro %d = %d (0x%04X)", i + 1, registros[i], registros[i]);
-    }
-
 
     return ESP_OK;
 }
